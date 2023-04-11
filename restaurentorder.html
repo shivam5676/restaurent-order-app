@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form onsubmit="savevalueincrud(event)">
+        <label for="price">PRICE</label>
+        <input type="tel" id="price" name="pricedata">
+        <label for="dish">DISH</label>
+        <input type="text" id="dish" name="dishdata">
+        <label for="table">SELECT TABLE</label>
+        <select id="table" name="tabledata">
+
+            <option>table1</option>
+            <option>table2</option>
+            <option>table3</option>
+        </select>
+
+
+        <input type="submit" value="ADD ITEM">
+
+    </form>
+    <hr>
+    <div class="window"></div>
+    <ul id="table1" style="background-color: aqua;">TABLE 1</ul>
+    <hr>
+    <ul id="table2">TABLE 2</ul>
+    <hr>
+    <ul id="table3">TABLE 3</ul>
+    <hr>
+    <script>
+        function savevalueincrud(event) {
+            event.preventDefault();
+            const price = event.target.pricedata.value;
+            const dish = event.target.dishdata.value;
+            const table = event.target.tabledata.value;
+
+
+            const myobj = {
+                price,
+                dish,
+                table
+            }
+            localStorage.setItem("userder", JSON.stringify(myobj))
+            axios.post("https://crudcrud.com/api/b0b0656ad0d245aeb3fcdbefbb40d80b/data", myobj)
+                .then((reso) => {
+                    console.log(reso)
+                  
+                    showdata(myobj);
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+               
+
+
+        }
+        window.addEventListener("DOMContentLoaded", () => {
+            axios.get("https://crudcrud.com/api/b0b0656ad0d245aeb3fcdbefbb40d80b/data")
+                .then((res) => {
+                    for (var i = 0; i < res.data.length; i++) {
+                        showdata(res.data[i])
+                    }
+                })
+        })
+        function showdata(myobj) {
+            
+            const parent1 = document.getElementById("table1");
+            const parent2 = document.getElementById("table2");
+            const parent3 = document.getElementById("table3");
+            const child = document.createElement("li")
+
+            const deletebtn1 = document.createElement("input")
+            deletebtn1.type = "button"
+            deletebtn1.value = "delete order"
+//WE CAN DO THIS BY USING SINGLE BUTTON
+            const deletebtn2 = document.createElement("input")
+            deletebtn2.type = "button"
+            deletebtn2.value = "delete order"
+            const deletebtn3 = document.createElement("input")
+            deletebtn3.type = "button"
+            deletebtn3.value = "delete order"
+
+
+
+            child.textContent = myobj.price + "__" + myobj.dish + "____" + myobj.table + "___" + myobj._id;
+
+
+
+
+            if (myobj.table == "table1") {
+                deletebtn1.onclick = () => {
+                    axios.delete(`https://crudcrud.com/api/b0b0656ad0d245aeb3fcdbefbb40d80b/data/${myobj._id}`)
+                        .then((ress) => {
+                            console.log(ress)
+                            parent1.removeChild(child)
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+
+
+
+                }
+                parent1.appendChild(child)
+                child.append(deletebtn1)
+
+            
+            }
+            if (myobj.table == "table2") {
+                deletebtn1.onclick = () => {
+                
+                    axios.delete(`https://crudcrud.com/api/b0b0656ad0d245aeb3fcdbefbb40d80b/data/${myobj._id}`)
+                        .then((ress) => {
+                            console.log(ress)
+                            parent2.removeChild(child)
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                    
+                }
+
+                parent2.appendChild(child)
+                child.append(deletebtn1)
+            }
+            if (myobj.table == "table3") {
+                deletebtn1.onclick = () => {
+                    axios.delete(`https://crudcrud.com/api/b0b0656ad0d245aeb3fcdbefbb40d80b/data/${myobj._id}`)
+                        .then((ress) => {
+                            console.log(ress)
+                            parent3.removeChild(child)
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+
+
+                    
+                }
+
+                // console.log("true")
+                parent3.appendChild(child)
+                child.append(deletebtn1)
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+
+</body>
+
+</html>
